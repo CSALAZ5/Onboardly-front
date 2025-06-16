@@ -1,0 +1,39 @@
+<div style="justify-content: end; margin: var(--sp-spacing-7)">
+  <div class="row">
+    <div class="col-lg-5">
+      <sp-at-input
+        #buscadorTabla
+        label=""
+        placeholder="Buscar por nombre o email"
+        type="TEXT"
+        status="HELP"
+        (atInputChanged)="search()"
+        (atInputEnterKey)="search()"
+      ></sp-at-input>
+    </div>
+    <div class="col-lg-3" style="margin-left: var(--sp-spacing-1)">
+      <sp-at-dropdown
+        name="1"
+        label=""
+        status="ENABLED"
+        placeholder="Todos los estados"
+        options='[{"text":"Opción 1","value":"1000"},{"text":"Opción 2","value":"1001"},{"text":"Opción 3","value":"1002"},{"text":"Opción 4","value":"1003"},{"text":"Opción 5","value":"1004"}]'
+      ></sp-at-dropdown>
+    </div>
+    <div class="col-lg-3" style="margin-left: var(--sp-spacing-2)">
+      <sp-at-dropdown
+        name="1"
+        label=""
+        status="ENABLED"
+        placeholder="Todos los Onboarding"
+        options='[{"text":"Opción 1","value":"1000"},{"text":"Opción 2","value":"1001"},{"text":"Opción 3","value":"1002"},{"text":"Opción 4","value":"1003"},{"text":"Opción 5","value":"1004"}]'
+      ></sp-at-dropdown>
+    </div>
+  </div>
+  <div class="col-lg-12" style="margin-top: var(--sp-spacing-7)">
+    <sp-ml-dynamic-table
+      [columnTable]="columnas"
+      [rowTable]="datosFiltrados"
+    ></sp-ml-dynamic-table>
+  </div>
+</div>
