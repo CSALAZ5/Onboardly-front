@@ -1,0 +1,16 @@
+<sp-tp-dashboard
+  header-title="Onboardly - Gestión de onboarding"
+  back-button="false"
+  close-button="false"
+  icon-tertiary=""
+  label-tertiary=""
+  icon-secundary=""
+  label-secundary=""
+  search-options=''
+  items-sidebar='[{"icon":"ico-home","label":"Dashboard"},{"icon":"ico-usuarios","label":"Colaboradores"},{"icon":"ico-calendar-default","label":"Calendario"}]'
+  (sidebarEmitter)="onSidebarEmit($event)"
+>
+  <div slot="slot-content">
+    <router-outlet></router-outlet>
+  </div>
+</sp-tp-dashboard>
