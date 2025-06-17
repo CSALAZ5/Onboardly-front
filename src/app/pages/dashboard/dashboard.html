@@ -1,9 +1,10 @@
-<div style="justify-content: end; margin: var(--sp-spacing-7)">
+<div style="justify-content: center; margin: var(--sp-spacing-7)">
   <div class="row">
     <div class="col-lg-5">
       <sp-at-input
         #buscadorTabla
-        label=""
+        name="Buscar colaboradores"
+        label="Buscar colaboradores"
         placeholder="Buscar por nombre o email"
         type="TEXT"
         status="HELP"
@@ -11,29 +12,172 @@
         (atInputEnterKey)="search()"
       ></sp-at-input>
     </div>
-    <div class="col-lg-3" style="margin-left: var(--sp-spacing-1)">
+    <div class="col-lg-6" style="margin-left: var(--sp-spacing-1)">
       <sp-at-dropdown
-        name="1"
-        label=""
+        #buscadorEstados
+        name="Estados onboarding bienvenida"
+        label="Estado del onboarding"
         status="ENABLED"
         placeholder="Todos los estados"
-        options='[{"text":"Opción 1","value":"1000"},{"text":"Opción 2","value":"1001"},{"text":"Opción 3","value":"1002"},{"text":"Opción 4","value":"1003"},{"text":"Opción 5","value":"1004"}]'
+        options='[
+        {"text":"Todos","value":"0"},
+        {"text":"Terminado","value":"1"},
+        {"text":"Pendiente","value":"2"}
+        ]'
+        defaultvalue="0"
+        (elementSelectedAtom)="searchState($event)"
       ></sp-at-dropdown>
     </div>
-    <div class="col-lg-3" style="margin-left: var(--sp-spacing-2)">
+    <!-- <div class="col-lg-3" style="margin-left: var(--sp-spacing-2)">
       <sp-at-dropdown
+        #buscadorOnboarding
         name="1"
-        label=""
+        label="Tipo de Onboarding"
         status="ENABLED"
         placeholder="Todos los Onboarding"
-        options='[{"text":"Opción 1","value":"1000"},{"text":"Opción 2","value":"1001"},{"text":"Opción 3","value":"1002"},{"text":"Opción 4","value":"1003"},{"text":"Opción 5","value":"1004"}]'
+        options='[
+        {"text":"Todos","value":"0"},
+        {"text":"Terminado","value":"1"},
+        {"text":"Pendiente","value":"2"}
+        ]'
+        defaultvalue="0"
       ></sp-at-dropdown>
-    </div>
+    </div> -->
   </div>
   <div class="col-lg-12" style="margin-top: var(--sp-spacing-7)">
     <sp-ml-dynamic-table
       [columnTable]="columnas"
-      [rowTable]="datosFiltrados"
+      [rowTable]="colaboradoresFiltrados()"
+      (itemClicked)="onItemClicked($event)"
     ></sp-ml-dynamic-table>
   </div>
 </div>
+<sp-ml-drawer
+  #modalEditarColaborador
+  size-drawer="lg"
+  title-drawer="Editar Colaborador"
+  tap-close
+>
+  <div
+    slot="bodyDrawer"
+    class="row"
+    style="gap: var(--sp-spacing-3); justify-content: space-between"
+  >
+    <div class="col-lg-12">
+      <sp-at-input
+        #inputNombreCompleto
+        label="Nombre:"
+        message="El nombre es obligatorio"
+        placeholder="Juan Díaz"
+        type="TEXT"
+        status="ENABLED"
+        required="true"
+        [value]="colaboradorSeleccionado()?.nombreCompleto"
+        (atInputUpdated)="actualizarCampo('nombreCompleto', $event.detail.value)"
+      ></sp-at-input>
+    </div>
+    <div class="col-lg-12">
+      <sp-at-input
+        #inputCorreo
+        label="Correo:"
+        message="Digite un correo electrónico válido"
+        placeholder="jdiaz@correo.com"
+        type="EMAIL"
+        status="ENABLED"
+        required="true"
+        email-validation-onBlur="true"
+        [value]="colaboradorSeleccionado()?.correo"
+        (atInputUpdated)="actualizarCampo('correo', $event.detail.value)"
+      ></sp-at-input>
+    </div>
+    <div class="col-lg-12">
+      <sp-ml-date-input
+        #fechaIngreso
+        name="Fecha de Ingreso"
+        text="Fecha de Ingreso:"
+        errorMessage="La fecha es incorrecta"
+        (dateChanged)="actualizarCampo('fechaIngreso', $event.detail.stringValue)"
+      ></sp-ml-date-input>
+    </div>
+    <div class="col-lg-12">
+      <sp-at-dropdown
+        #dropDownEventos
+        label="Asignar Onboarding técnico:"
+        status="ENABLED"
+        placeholder="Selecciona el onboarding técnico"
+        [defaultvalue]="colaboradorSeleccionado()?.eventoTecnico?.id || ''"
+        [options]="dropdownEventos()"
+        (elementSelectedAtom)="actualizarCampo('eventoTecnico', $event.detail.value)"
+      ></sp-at-dropdown>
+    </div>
+
+    <div class="col-lg-12" style="gap: var(--sp-spacing-3)">
+      <div
+        class="botones-acciones"
+        style="
+          display: flex;
+          gap: var(--sp-spacing-3);
+          justify-content: flex-start;
+        "
+      >
+        <button
+          class="sp-at-btn sp-at-btn--primary sp-at-btn--sm"
+          [disabled]="editarColaboradorForm.invalid"
+          (click)="guardarColaborador()"
+        >
+          Guardar
+        </button>
+        <button
+          class="sp-at-btn sp-at-btn--secondary sp-at-btn--sm"
+          (click)="cancelarEdicion()"
+        >
+          Cancelar
+        </button>
+        <button
+          class="sp-at-btn sp-at-btn--tertiary sp-at-btn--sm"
+          (click)="abrirModalEliminacion()"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</sp-ml-drawer>
+<sp-ml-modal-normal
+  #modalConfirmacion
+  size-modal="md"
+  titlemodal="Confirmación de Eliminación"
+>
+  <div slot="body-modal">
+    <p>
+      ¿Estás seguro de que deseas eliminar a
+      <strong>{{ colaboradorSeleccionado()?.nombreCompleto }}</strong>?
+    </p>
+    <p>
+      Esta acción no se puede deshacer y eliminará permanentemente al
+      colaborador de la base de datos.
+    </p>
+    <div
+      class="botones-acciones"
+      style="
+        display: flex;
+        gap: var(--sp-spacing-3);
+        justify-content: flex-end;
+        margin-top: var(--sp-spacing-3);
+      "
+    >
+      <button
+        class="sp-at-btn sp-at-btn--primary sp-at-btn--sm"
+        (click)="eliminarColaborador()"
+      >
+        Confirmar
+      </button>
+      <button
+        class="sp-at-btn sp-at-btn--secondary sp-at-btn--sm"
+        (click)="cerrarModalEliminacion()"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+</sp-ml-modal-normal>
