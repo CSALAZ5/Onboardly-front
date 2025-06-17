@@ -1,1 +1,101 @@
-<p>collaborators works!</p>
+<div
+  class="row"
+  style="
+    justify-content: start;
+    margin: var(--sp-spacing-7);
+    gap: var(--sp-spacing-3);
+  "
+>
+  <div class="col-lg-12 sp-text-kiffo-heading-4">Añadir Colaborador</div>
+  <div class="col-lg-12">
+    <sp-at-input
+      label="Nombre:"
+      placeholder="Juan Díaz"
+      type="TEXT"
+      status="ENABLED"
+      required="true"
+      password-mode="false"
+      [value]="nuevoColaborador().nombreCompleto"
+      (atInputUpdated)="actualizarCampo('nombreCompleto', $event.detail.value)"
+    ></sp-at-input>
+  </div>
+
+  <div class="col-lg-12">
+    <sp-at-input
+      label="Correo:"
+      placeholder="jdiaz@correo.com"
+      type="EMAIL"
+      status="ENABLED"
+      required="true"
+      password-mode="false"
+      [value]="nuevoColaborador().correo"
+      (atInputUpdated)="actualizarCampo('correo', $event.detail.value)"
+    ></sp-at-input>
+  </div>
+
+  <div class="col-lg-12">
+    <sp-ml-date-input
+      #fechaIngreso
+      name="Fecha de Ingreso"
+      text="Fecha de Ingreso:"
+      errorMessage="La fecha es incorrecta"
+      (dateChanged)="actualizarCampo('fechaIngreso', $event.detail.stringValue)"
+    ></sp-ml-date-input>
+  </div>
+
+  <div
+    class="col-lg-12"
+    style="display: flex; gap: var(--sp-spacing-5); flex-wrap: wrap"
+  >
+    <sp-at-check-button
+      #CheckBoxOnboardings
+      is-horizontal="true"
+      id="check"
+      (checkEmitter)="dataCheckButton($event)"
+      values-to-check='[
+        { "label":"Onboarding de Bienvenida Completado", "value": "bienvenida", "isChecked": "false" },
+        { "label":"Onboarding Técnico Completado", "value": "tecnico", "isChecked": "false" }
+      ]'
+    ></sp-at-check-button>
+  </div>
+  <div class="col-lg-12" *ngIf="dropdownEventos().length > 0">
+    <sp-at-dropdown
+      id-el="dropDownEv"
+      label="Asignar Onboarding técnico:"
+      status="ENABLED"
+      placeholder="Selecciona el onboarding técnico"
+      [defaultvalue]=""
+      [options]='dropdownEventos()'
+      (elementSelectedAtom)="actualizarCampo('eventoTecnico', $event.detail.value)"
+    ></sp-at-dropdown>
+  </div>
+
+  <div class="col-lg-12">
+    <div
+      class="botones-acciones"
+      style="display: flex; gap: var(--sp-spacing-3)"
+    >
+      <button
+        class="sp-at-btn sp-at-btn--primary sp-at-btn--sm"
+        [disabled]="!isFormValid()"
+        (click)="crearColaborador()"
+      >
+        Crear
+      </button>
+      <button
+        class="sp-at-btn sp-at-btn--tertiary sp-at-btn--sm"
+        (click)="resetFormulario()"
+      >
+        Limpiar
+      </button>
+    </div>
+  </div>
+</div>
+<sp-ml-modal
+  #modalCreacionColaborador
+  is-close
+  [icon]="modalIcon()"
+  [titleModal]="modalTitle()"
+  [subTitle]="modalSubtitle()"
+  hidden-buttons
+></sp-ml-modal>
