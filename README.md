@@ -1,59 +1,111 @@
-# Onboardly
+# 🧭 Onboardly Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.2.
+Frontend de **Onboardly**, una aplicación diseñada para gestionar el proceso de onboarding técnico de nuevos colaboradores. Esta interfaz está construida con **Angular 19**, utiliza **señales reactivas** y está desplegada en **AWS S3 + CloudFront**.
 
-## Development server
+---
 
-To start a local development server, run:
+## 📦 Tecnologías utilizadas
+
+- ✅ Angular 20 (con Standalone Components y Signals)
+- ✅ TypeScript
+- ✅ SCSS y diseño responsivo
+- ✅ FullCalendar para gestión de eventos
+- ✅ Sendgrid para envío de correos
+- ✅ AWS S3 + CloudFront (Despliegue)
+- ✅ GitHub Actions (CI/CD)
+- ✅ Comunicación con API REST en Java Spring Boot
+
+---
+
+## 🚀 Funcionalidades
+
+- 📋 Listado y creación de colaboradores.
+- 📅 Visualización de eventos técnicos en un calendario interactivo.
+- ✉️ Envío de recordatorios por correo.
+- ✅ Validaciones reactivas en formularios.
+
+---
+
+## 🛠️ Instalación local
 
 ```bash
+git clone https://github.com/CSALAZ5/Onboardly-front.git
+cd Onboardly-front
+npm install
 ng serve
+````
+
+> La app estará disponible en `http://localhost:4200`
+
+---
+
+## ⚙️ Configuración
+
+Asegúrate de tener un archivo `environment.ts` en `src/environments/` con la siguiente estructura:
+
+```ts
+export const host = 'http://onboardly-backend-env.eba-pxdbzrsx.us-east-1.elasticbeanstalk.com';
+
+export const environment = {
+  production: false,
+  api: { // Rest-full api data
+    colaboradores: `${ host }/api/colaboradores`,
+    calendario: `${ host }/api/calendario`,
+    mail: `${ host }/api/mail`
+  }
+
+};
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+En producción se usa `environment.prod.ts` con el endpoint real del backend desplegado en AWS Beanstalk.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 📤 Despliegue
+
+El despliegue se realiza mediante GitHub Actions y se sincroniza automáticamente el contenido del directorio `dist/browser/` a un bucket de S3. CloudFront sirve como CDN para distribuir la app.
+
+Para compilar en modo producción:
 
 ```bash
-ng generate component component-name
+ng build --configuration=production
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+El contenido se genera en `dist/browser`.
 
-```bash
-ng generate --help
-```
+---
 
-## Building
+## 🧪 Scripts útiles
 
-To build the project run:
+* `ng serve` - Levanta el servidor local de desarrollo.
+* `ng build` - Compila el proyecto.
+* `npm run lint` - Linting del código.
+* `npm run format` - Formatea con Prettier.
 
-```bash
-ng build
-```
+---
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## ✅ Estado del proyecto
 
-## Running unit tests
+* 🔄 En desarrollo
+* 🧪 Testeado localmente y desplegado manualmente en ambiente AWS
+* 🔐 Backend protegido con CORS configurado
+* 🖥️ Preparado para entornos de staging
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+## ℹ️ Información adicional
 
-## Running end-to-end tests
+Este proyecto es de carácter **personal** y fue desarrollado como solución a un **reto técnico individual**. No representa un producto comercial ni está destinado para uso en producción real.
 
-For end-to-end (e2e) testing, run:
+Aunque el flujo ideal de despliegue contempla el uso de **GitHub Actions** para publicar automáticamente la aplicación en un **bucket S3**, actualmente el proceso automatizado **falla** debido a **incompatibilidades entre FullCalendar y Angular 20**.
 
-```bash
-ng e2e
-```
+Por esta razón, el **despliegue final se realizó manualmente**, compilando el proyecto en local y cargando los archivos estáticos al bucket de S3 de forma directa.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
+## 🧑‍💻 Autor
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Christian Salazar
+[github.com/CSALAZ5](https://github.com/CSALAZ5)
+
+---
