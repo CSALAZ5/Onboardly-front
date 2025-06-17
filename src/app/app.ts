@@ -14,7 +14,6 @@ export class App {
   constructor(private router: Router) {}
 
   onSidebarEmit(event: any): void{
-    console.log("Event:", event);
 
     if (event.detail?.item?.label) {
       const label = event.detail.item.label;

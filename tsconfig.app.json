@@ -8,7 +8,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/app/models/colaborador.ts"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]
