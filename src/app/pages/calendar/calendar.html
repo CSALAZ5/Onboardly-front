@@ -1,1 +1,98 @@
-<p>calendar works!</p>
+<div
+  class="row"
+  style="
+    justify-content: end;
+    margin: var(--sp-spacing-7);
+    gap: var(--sp-spacing-3);
+  "
+>
+  <div class="col-lg-12 sp-title sp-text-kiffo-heading-4">
+    Calendario de Onboarding
+  </div>
+  <div class="col-lg-12" *ngIf="loading()">Cargando eventos...</div>
+
+  <div class="col-lg-3" style="justify-content: end">
+    <button class="sp-at-btn sp-at-btn--primary sp-at-btn--sm" (click)="enviarRecordatorio()">
+      Enviar Recordatorio
+    </button>
+  </div>
+
+  <full-calendar
+    class="col-lg-12"
+    *ngIf="!loading()"
+    [options]="calendarOptions()"
+  ></full-calendar>
+</div>
+
+<sp-ml-drawer
+  #modalDrawer
+  size-drawer="lg"
+  [titleDrawer]="isEditando ? 'Editar Evento' : 'Nuevo Evento'"
+  tap-close
+>
+  <div
+    slot="bodyDrawer"
+    class="row"
+    style="gap: var(--sp-spacing-3); justify-content: space-between"
+  >
+    <div class="col-lg-12">
+      <sp-at-input
+        label="Nombre:"
+        message=""
+        placeholder="Nombre del evento..."
+        type="TEXT"
+        status="ENABLED"
+        required="true"
+        password-mode="false"
+        view-mode
+        [value]="formEvento.nombre"
+        (atInputUpdated)="actualizarNombre($event.detail.value)"
+      ></sp-at-input>
+    </div>
+
+    <div class="col-lg-5">
+      <sp-ml-calendar-lite
+        #inputFechaInicio
+        id-el="fechaInicio"
+        label="Fecha Inicio:"
+        (liteCalendarChanged)="cambioFechaInicio($event.detail)"
+      ></sp-ml-calendar-lite>
+    </div>
+
+    <div class="col-lg-6">
+      <sp-ml-calendar-lite
+        #inputFechaFin
+        id-el="fechaFin"
+        label="Fecha Fin:"
+        (liteCalendarChanged)="cambioFechaFin($event.detail)"
+      ></sp-ml-calendar-lite>
+    </div>
+
+    <div class="col-lg-12" style="gap: var(--sp-spacing-3)">
+      <div
+        class="botones-acciones"
+        style="display: flex; gap: var(--sp-spacing-3); justify-content: flex-start"
+      >
+        <button
+          class="sp-at-btn sp-at-btn--primary sp-at-btn--sm"
+          (click)="guardarEvento()"
+        >
+          Guardar
+        </button>
+        <button
+          class="sp-at-btn sp-at-btn--secondary sp-at-btn--sm"
+          (click)="cerrarModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          *ngIf="isEditando"
+          class="sp-at-btn sp-at-btn--tertiary sp-at-btn--sm"
+          (click)="eliminarEvento()"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</sp-ml-drawer>

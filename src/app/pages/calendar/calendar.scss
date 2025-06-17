@@ -1,0 +1,11 @@
+.fc, .fc * {
+  font-family: 'Kiffo', 'Roboto', 'Helvetica', sans-serif !important;
+}
+
+
+.botones-acciones button {
+  flex: 1 1 auto; /* se adaptan al espacio disponible */
+  min-width: 110px;
+  max-width: 200px;
+}
+
